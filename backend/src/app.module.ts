@@ -30,6 +30,7 @@ import { StatisticsModule } from './statistics/statistics.module';
     ExperimentsModule,
     FeedingModule,
     StatisticsModule,
+    AnimalTransfersModule,
   ],
 })
 export class AppModule {}

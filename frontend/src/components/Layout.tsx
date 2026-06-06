@@ -21,6 +21,7 @@ const { Title, Text } = Typography;
 const menuItems = [
   { key: '/dashboard', icon: <DashboardOutlined />, label: '系统首页' },
   { key: '/animals', icon: <BugOutlined />, label: '动物管理' },
+  { key: '/animal-transfers', icon: <SwapOutlined />, label: '转移借调' },
   { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
   { key: '/experiments', icon: <ExperimentOutlined />, label: '实验项目' },
   { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },

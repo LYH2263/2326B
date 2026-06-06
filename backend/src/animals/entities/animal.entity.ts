@@ -66,4 +66,7 @@ export class Animal {
 
   @OneToMany(() => FeedingRecord, (record) => record.animal)
   feedingRecords: FeedingRecord[];
+
+  @OneToMany(() => AnimalTransfer, (transfer) => transfer.animal)
+  transfers: AnimalTransfer[];
 }

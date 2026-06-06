@@ -182,6 +182,30 @@ INSERT INTO `experiment_animals` (`experiment_id`, `animal_id`, `role`, `join_da
 (5, 12, 'control_group', '2025-09-01', '2025-12-30', '对照组');
 
 -- ========================================
+-- 动物转移/借调记录表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `animal_transfers` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `animal_id` INT NOT NULL COMMENT '动物ID',
+  `from_department` VARCHAR(100) NOT NULL COMMENT '转出方（部门/实验室名称）',
+  `to_department` VARCHAR(100) NOT NULL COMMENT '接收方（部门/实验室名称）',
+  `reason` ENUM('experiment_borrow', 'permanent_transfer', 'return_to_supplier') NOT NULL COMMENT '转移原因',
+  `transfer_date` DATE NOT NULL COMMENT '转移日期',
+  `expected_return_date` DATE DEFAULT NULL COMMENT '预计归还日期（借调时使用）',
+  `actual_return_date` DATE DEFAULT NULL COMMENT '实际归还日期',
+  `status` ENUM('pending', 'in_transit', 'completed', 'returned') NOT NULL DEFAULT 'pending' COMMENT '状态',
+  `handler` VARCHAR(100) NOT NULL COMMENT '经办人',
+  `approver` VARCHAR(100) DEFAULT NULL COMMENT '审批人',
+  `remarks` TEXT COMMENT '备注',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`animal_id`) REFERENCES `animals`(`id`) ON DELETE CASCADE,
+  INDEX `idx_animal_id` (`animal_id`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_transfer_date` (`transfer_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='动物转移/借调记录表';
+
+-- ========================================
 -- 种子数据：饲养记录
 -- ========================================
 INSERT INTO `feeding_records` (`animal_id`, `feed_date`, `feed_time`, `food_type`, `quantity`, `unit`, `water_ml`, `feeder`, `notes`) VALUES
@@ -200,3 +224,15 @@ INSERT INTO `feeding_records` (`animal_id`, `feed_date`, `feed_time`, `food_type
 (1, '2026-01-21', '08:00:00', '标准啮齿类动物饲料', 5.00, 'g', 8.00, '小李', '正常进食'),
 (2, '2026-01-21', '08:00:00', '标准啮齿类动物饲料', 4.80, 'g', 7.20, '小李', '正常进食'),
 (6, '2026-01-21', '08:00:00', '标准大鼠饲料', 24.00, 'g', 33.00, '小张', '正常进食');
+
+-- ========================================
+-- 种子数据：动物转移/借调记录
+-- ========================================
+INSERT INTO `animal_transfers` (`animal_id`, `from_department`, `to_department`, `reason`, `transfer_date`, `expected_return_date`, `actual_return_date`, `status`, `handler`, `approver`, `remarks`) VALUES
+(1, '动物饲养中心', '药理学研究室', 'experiment_borrow', '2026-01-15', '2026-02-15', NULL, 'in_transit', '小李', '王主任', '用于急性毒性预实验'),
+(2, '动物饲养中心', '药理学研究室', 'experiment_borrow', '2026-01-15', '2026-02-15', NULL, 'in_transit', '小李', '王主任', '用于急性毒性预实验'),
+(5, '动物饲养中心', '免疫学研究室', 'permanent_transfer', '2026-01-10', NULL, NULL, 'completed', '小张', '李主任', '永久调拨至免疫室用于抗体生产'),
+(9, '抗体研究组', '动物饲养中心', 'experiment_borrow', '2026-01-05', '2026-01-20', '2026-01-18', 'returned', '小刘', '赵主任', '抗体滴度检测完成后归还'),
+(10, '山东鲁抗实验动物中心', '动物饲养中心', 'permanent_transfer', '2026-01-12', NULL, NULL, 'completed', '小王', '王主任', '新购入新西兰白兔，检疫后入饲养中心'),
+(3, '药理学研究室', '动物饲养中心', 'return_to_supplier', '2026-02-01', NULL, NULL, 'pending', '小陈', '李主任', '实验结束后退还给供应商'),
+(7, '毒理学研究室', '动物饲养中心', 'experiment_borrow', '2026-01-20', '2026-02-20', NULL, 'pending', '小张', '王主任', '恢复观察期后归还饲养中心');

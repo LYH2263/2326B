@@ -96,4 +96,17 @@ export const statisticsApi = {
   getFeedingStats: () => api.get('/statistics/feeding'),
 };
 
+// ========== 动物转移/借调 API ==========
+export const animalTransferApi = {
+  getList: (params?: any) => api.get('/animal-transfers', { params }),
+  getDetail: (id: number) => api.get(`/animal-transfers/${id}`),
+  create: (data: any) => api.post('/animal-transfers', data),
+  update: (id: number, data: any) => api.patch(`/animal-transfers/${id}`, data),
+  delete: (id: number) => api.delete(`/animal-transfers/${id}`),
+  startTransit: (id: number) => api.post(`/animal-transfers/${id}/start-transit`),
+  confirmDelivery: (id: number) => api.post(`/animal-transfers/${id}/confirm-delivery`),
+  confirmReturn: (id: number) => api.post(`/animal-transfers/${id}/confirm-return`),
+  getTimeline: (id: number) => api.get(`/animal-transfers/${id}/timeline`),
+};
+
 export default api;
