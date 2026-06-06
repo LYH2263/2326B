@@ -451,10 +451,11 @@ const AnimalTransfers: React.FC = () => {
                 optionFilterProp="children"
                 placeholder="搜索并选择动物"
                 onChange={handleAnimalChange}
+                disabled={!!editingRecord}
               >
                 {animals.map(a => (
-                  <Option key={a.id} value={a.id}>
-                    {a.name} ({a.species})
+                  <Option key={a.id} value={a.id} disabled={a.status === 'deceased'}>
+                    {a.name} ({a.species}) {a.status === 'deceased' && '- 已死亡'}
                   </Option>
                 ))}
               </Select>

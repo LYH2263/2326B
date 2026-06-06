@@ -382,7 +382,11 @@ const Experiments: React.FC = () => {
         <Form form={animalForm} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item name="animalId" label="选择动物" rules={[{ required: true, message: '请选择动物' }]}>
             <Select showSearch optionFilterProp="children" placeholder="搜索选择">
-              {animals.map(a => <Option key={a.id} value={a.id}>{a.name} ({a.species} - {a.breed || '未知品系'})</Option>)}
+              {animals.map(a => (
+                <Option key={a.id} value={a.id} disabled={a.status === 'deceased'}>
+                  {a.name} ({a.species} - {a.breed || '未知品系'}) {a.status === 'deceased' && '- 已死亡'}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item name="role" label="角色">

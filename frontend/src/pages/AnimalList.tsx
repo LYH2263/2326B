@@ -5,10 +5,11 @@ import {
 } from 'antd';
 import {
   PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined,
-  EyeOutlined, ReloadOutlined,
+  EyeOutlined, ReloadOutlined, FileTextOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { animalApi } from '../api';
+import { animalApi, deathRecordApi } from '../api';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -28,6 +29,7 @@ const genderOptions = [
 ];
 
 const AnimalList: React.FC = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
@@ -176,23 +178,48 @@ const AnimalList: React.FC = () => {
     {
       title: '操作',
       key: 'action',
-      width: 160,
+      width: 200,
       fixed: 'right' as const,
-      render: (_: any, record: any) => (
-        <Space size="small">
-          <Tooltip title="查看详情">
-            <Button type="link" size="small" icon={<EyeOutlined />} onClick={() => handleDetail(record.id)} />
-          </Tooltip>
-          <Tooltip title="编辑">
-            <Button type="link" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-          </Tooltip>
-          <Popconfirm title="确定删除该动物记录吗？" onConfirm={() => handleDelete(record.id)} okText="确定" cancelText="取消">
-            <Tooltip title="删除">
-              <Button type="link" size="small" danger icon={<DeleteOutlined />} />
+      render: (_: any, record: any) => {
+        const isDeceased = record.status === 'deceased';
+        return (
+          <Space size="small">
+            <Tooltip title="查看详情">
+              <Button type="link" size="small" icon={<EyeOutlined />} onClick={() => handleDetail(record.id)} />
             </Tooltip>
-          </Popconfirm>
-        </Space>
-      ),
+            <Tooltip title={isDeceased ? '已死亡动物无法编辑' : '编辑'}>
+              <Button
+                type="link"
+                size="small"
+                icon={<EditOutlined />}
+                disabled={isDeceased}
+                onClick={() => !isDeceased && handleEdit(record)}
+              />
+            </Tooltip>
+            {isDeceased ? (
+              <Tooltip title="查看死亡记录">
+                <Button
+                  type="link"
+                  size="small"
+                  icon={<FileTextOutlined />}
+                  onClick={() => navigate('/death-records')}
+                />
+              </Tooltip>
+            ) : (
+              <Popconfirm
+                title="确定删除该动物记录吗？"
+                onConfirm={() => handleDelete(record.id)}
+                okText="确定"
+                cancelText="取消"
+              >
+                <Tooltip title="删除">
+                  <Button type="link" size="small" danger icon={<DeleteOutlined />} />
+                </Tooltip>
+              </Popconfirm>
+            )}
+          </Space>
+        );
+      },
     },
   ];
 
@@ -247,6 +274,7 @@ const AnimalList: React.FC = () => {
           columns={columns}
           rowKey="id"
           scroll={{ x: 900 }}
+          rowClassName={(record: any) => record.status === 'deceased' ? 'deceased-animal-row' : ''}
           pagination={{
             current: page,
             pageSize,

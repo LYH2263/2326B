@@ -9,6 +9,8 @@ import {
 import { HealthRecord } from '../../health/entities/health-record.entity';
 import { ExperimentAnimal } from '../../experiments/entities/experiment-animal.entity';
 import { FeedingRecord } from '../../feeding/entities/feeding-record.entity';
+import { AnimalTransfer } from '../../animal-transfers/entities/animal-transfer.entity';
+import { DeathRecord } from '../../death-records/entities/death-record.entity';
 
 @Entity('animals')
 export class Animal {
@@ -69,4 +71,7 @@ export class Animal {
 
   @OneToMany(() => AnimalTransfer, (transfer) => transfer.animal)
   transfers: AnimalTransfer[];
+
+  @OneToMany(() => DeathRecord, (record) => record.animal)
+  deathRecords: DeathRecord[];
 }

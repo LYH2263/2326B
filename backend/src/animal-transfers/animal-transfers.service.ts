@@ -34,10 +34,8 @@ export class AnimalTransfersService {
       throw new BadRequestException('非借调类型无需填写预计归还日期');
     }
 
-    const transfer = this.transferRepository.create({
-      ...dto,
-      status: 'pending',
-    } as any);
+    const transfer = this.transferRepository.create(dto);
+    transfer.status = 'pending';
     const saved = await this.transferRepository.save(transfer);
     this.logger.log(`Created animal transfer record: ${saved.id}`);
     return this.findOne(saved.id);

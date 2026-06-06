@@ -13,6 +13,8 @@ import {
   MenuOutlined,
   UserOutlined,
   LogoutOutlined,
+  SwapOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
@@ -25,6 +27,7 @@ const menuItems = [
   { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
   { key: '/experiments', icon: <ExperimentOutlined />, label: '实验项目' },
   { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },
+  { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },
   { key: '/statistics', icon: <BarChartOutlined />, label: '数据统计' },
 ];
 
@@ -41,6 +44,28 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
   const { token } = theme.useToken();
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  const getSelectedKey = () => {
+    const path = location.pathname;
+    if (path.startsWith('/death-records')) return '/death-records';
+    if (path.startsWith('/necropsy-reports')) return '/death-records';
+    if (path.startsWith('/animal-transfers')) return '/animal-transfers';
+    return path;
+  };
+
+  const getPageTitle = () => {
+    const path = location.pathname;
+    const menuItem = menuItems.find(item => {
+      if (item.key === '/death-records') {
+        return path.startsWith('/death-records') || path.startsWith('/necropsy-reports');
+      }
+      if (item.key === '/animal-transfers') {
+        return path.startsWith('/animal-transfers');
+      }
+      return item.key === path;
+    });
+    return menuItem?.label || '实验室动物信息管理系统';
+  };
 
   const handleMenuClick = (key: string) => {
     navigate(key);
@@ -91,7 +116,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       </div>
       <Menu
         mode="inline"
-        selectedKeys={[location.pathname]}
+        selectedKeys={[getSelectedKey()]}
         items={menuItems}
         onClick={({ key }) => handleMenuClick(key)}
         style={{ border: 'none', padding: '8px' }}
@@ -169,7 +194,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
               />
             )}
             <Title level={5} style={{ margin: 0, color: token.colorTextHeading }}>
-              {menuItems.find((item) => item.key === location.pathname)?.label || '实验室动物信息管理系统'}
+              {getPageTitle()}
             </Title>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

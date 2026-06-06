@@ -109,4 +109,35 @@ export const animalTransferApi = {
   getTimeline: (id: number) => api.get(`/animal-transfers/${id}/timeline`),
 };
 
+// ========== 死亡记录 API ==========
+export const deathRecordApi = {
+  getList: (params?: any) => api.get('/death-records', { params }),
+  getDetail: (id: number) => api.get(`/death-records/${id}`),
+  getByAnimalId: (animalId: number) => api.get(`/death-records/animal/${animalId}`),
+  create: (data: any) => api.post('/death-records', data),
+  update: (id: number, data: any) => api.patch(`/death-records/${id}`, data),
+  delete: (id: number) => api.delete(`/death-records/${id}`),
+  getStatsByCause: () => api.get('/death-records/stats/by-cause'),
+  getStatsByNecropsyStatus: () => api.get('/death-records/stats/by-necropsy-status'),
+};
+
+// ========== 尸检报告 API ==========
+export const necropsyReportApi = {
+  getList: () => api.get('/necropsy-reports'),
+  getDetail: (id: number) => api.get(`/necropsy-reports/${id}`),
+  getByDeathRecordId: (deathRecordId: number) => api.get(`/necropsy-reports/death-record/${deathRecordId}`),
+  create: (deathRecordId: number, data: any) => api.post(`/necropsy-reports/death-record/${deathRecordId}`, data),
+  update: (id: number, data: any) => api.patch(`/necropsy-reports/${id}`, data),
+  delete: (id: number) => api.delete(`/necropsy-reports/${id}`),
+  uploadImage: (id: number, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(`/necropsy-reports/${id}/upload-image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  removeImage: (id: number, imageUrl: string) =>
+    api.delete(`/necropsy-reports/${id}/images`, { data: { imageUrl } }),
+};
+
 export default api;

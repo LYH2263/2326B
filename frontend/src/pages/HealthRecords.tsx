@@ -247,8 +247,12 @@ const HealthRecords: React.FC = () => {
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
             <Form.Item name="animalId" label="动物" rules={[{ required: true, message: '请选择动物' }]}>
-              <Select showSearch optionFilterProp="children" placeholder="选择动物">
-                {animals.map(a => <Option key={a.id} value={a.id}>{a.name} ({a.species})</Option>)}
+              <Select showSearch optionFilterProp="children" placeholder="选择动物" disabled={!!editingRecord}>
+                {animals.map(a => (
+                  <Option key={a.id} value={a.id} disabled={a.status === 'deceased'}>
+                    {a.name} ({a.species}) {a.status === 'deceased' && '- 已死亡'}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item name="checkDate" label="检查日期" rules={[{ required: true, message: '请选择日期' }]}>

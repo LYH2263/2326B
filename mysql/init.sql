@@ -206,6 +206,47 @@ CREATE TABLE IF NOT EXISTS `animal_transfers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='动物转移/借调记录表';
 
 -- ========================================
+-- 死亡记录表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `death_records` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `animal_id` INT NOT NULL COMMENT '动物ID',
+  `death_datetime` DATETIME NOT NULL COMMENT '死亡日期时间',
+  `cause_category` ENUM('natural', 'experiment_termination', 'accidental', 'euthanasia') NOT NULL COMMENT '死亡原因分类',
+  `cause_description` TEXT COMMENT '详细死亡原因描述',
+  `found_by` VARCHAR(100) DEFAULT NULL COMMENT '发现人',
+  `confirming_vet` VARCHAR(100) DEFAULT NULL COMMENT '确认兽医',
+  `disposal_method` ENUM('necropsy', 'incineration', 'cryopreservation') NOT NULL COMMENT '处置方式',
+  `necropsy_status` ENUM('not_needed', 'pending', 'completed') NOT NULL DEFAULT 'not_needed' COMMENT '尸检状态',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`animal_id`) REFERENCES `animals`(`id`) ON DELETE CASCADE,
+  INDEX `idx_animal_id` (`animal_id`),
+  INDEX `idx_death_datetime` (`death_datetime`),
+  INDEX `idx_cause_category` (`cause_category`),
+  INDEX `idx_necropsy_status` (`necropsy_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='死亡记录表';
+
+-- ========================================
+-- 尸检报告表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `necropsy_reports` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `death_record_id` INT NOT NULL COMMENT '死亡记录ID',
+  `necropsy_date` DATE NOT NULL COMMENT '尸检日期',
+  `performed_by` VARCHAR(100) DEFAULT NULL COMMENT '执行人',
+  `gross_findings` TEXT COMMENT '大体观察结果',
+  `histopathology_findings` TEXT COMMENT '组织病理学发现',
+  `final_diagnosis` TEXT COMMENT '最终诊断',
+  `image_urls` JSON COMMENT '关联图片列表',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`death_record_id`) REFERENCES `death_records`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `uk_death_record_id` (`death_record_id`),
+  INDEX `idx_necropsy_date` (`necropsy_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='尸检报告表';
+
+-- ========================================
 -- 种子数据：饲养记录
 -- ========================================
 INSERT INTO `feeding_records` (`animal_id`, `feed_date`, `feed_time`, `food_type`, `quantity`, `unit`, `water_ml`, `feeder`, `notes`) VALUES
@@ -236,3 +277,19 @@ INSERT INTO `animal_transfers` (`animal_id`, `from_department`, `to_department`,
 (10, '山东鲁抗实验动物中心', '动物饲养中心', 'permanent_transfer', '2026-01-12', NULL, NULL, 'completed', '小王', '王主任', '新购入新西兰白兔，检疫后入饲养中心'),
 (3, '药理学研究室', '动物饲养中心', 'return_to_supplier', '2026-02-01', NULL, NULL, 'pending', '小陈', '李主任', '实验结束后退还给供应商'),
 (7, '毒理学研究室', '动物饲养中心', 'experiment_borrow', '2026-01-20', '2026-02-20', NULL, 'pending', '小张', '王主任', '恢复观察期后归还饲养中心');
+
+-- ========================================
+-- 种子数据：死亡记录
+-- ========================================
+INSERT INTO `death_records` (`animal_id`, `death_datetime`, `cause_category`, `cause_description`, `found_by`, `confirming_vet`, `disposal_method`, `necropsy_status`) VALUES
+(4, '2026-01-15 14:30:00', 'experiment_termination', '实验结束后安乐死，符合动物伦理规范', '小陈', '李医生', 'necropsy', 'completed'),
+(12, '2026-01-18 09:15:00', 'natural', '老年自然死亡，无明显外伤或疾病症状', '小李', '张医生', 'incineration', 'not_needed');
+
+-- ========================================
+-- 种子数据：尸检报告
+-- ========================================
+INSERT INTO `necropsy_reports` (`death_record_id`, `necropsy_date`, `performed_by`, `gross_findings`, `histopathology_findings`, `final_diagnosis`, `image_urls`) VALUES
+(1, '2026-01-16', '李医生', '大体观察：体重约20g，体型消瘦，被毛凌乱。腹腔内各脏器位置正常，肝脏颜色略浅，脾脏体积缩小。心脏大小正常，肺脏表面光滑无出血点。胃肠道空虚。', '组织病理学检查：肝细胞轻度脂肪变性，脾淋巴细胞数量减少，符合实验药物引起的免疫抑制表现。肾小管上皮细胞轻度水肿。', '实验药物引起的免疫抑制导致的多器官功能轻度损伤，结合实验方案判定为实验终点安乐死。', NULL);
+
+-- 更新已死亡动物状态
+UPDATE `animals` SET `status` = 'deceased' WHERE `id` IN (4, 12);

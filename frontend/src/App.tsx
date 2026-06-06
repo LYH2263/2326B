@@ -9,6 +9,10 @@ import HealthRecords from './pages/HealthRecords';
 import Experiments from './pages/Experiments';
 import FeedingRecords from './pages/FeedingRecords';
 import Statistics from './pages/Statistics';
+import AnimalTransfers from './pages/AnimalTransfers';
+import DeathRecords from './pages/DeathRecords';
+import DeathRecordForm from './pages/DeathRecordForm';
+import NecropsyReportDetail from './pages/NecropsyReportDetail';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -78,6 +82,10 @@ const App: React.FC = () => {
             <Route path="experiments" element={<Experiments />} />
             <Route path="feeding" element={<FeedingRecords />} />
             <Route path="statistics" element={<Statistics />} />
+            <Route path="death-records" element={<DeathRecords />} />
+            <Route path="death-records/new" element={<DeathRecordForm />} />
+            <Route path="death-records/:id/edit" element={<DeathRecordForm />} />
+            <Route path="necropsy-reports/:id" element={<NecropsyReportDetail />} />
           </Route>
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
         </Routes>

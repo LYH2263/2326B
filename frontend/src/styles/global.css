@@ -91,6 +91,16 @@ body {
   background: #f0f5ff !important;
 }
 
+/* 已死亡动物行样式 */
+.deceased-animal-row > td {
+  opacity: 0.5;
+  background: #f5f5f5 !important;
+}
+
+.deceased-animal-row:hover > td {
+  background: #e8e8e8 !important;
+}
+
 /* Logo 样式 */
 .logo-container {
   display: flex;
