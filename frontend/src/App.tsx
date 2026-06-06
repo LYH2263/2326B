@@ -13,6 +13,9 @@ import AnimalTransfers from './pages/AnimalTransfers';
 import DeathRecords from './pages/DeathRecords';
 import DeathRecordForm from './pages/DeathRecordForm';
 import NecropsyReportDetail from './pages/NecropsyReportDetail';
+import InventoryOverview from './pages/InventoryOverview';
+import InventoryItems from './pages/InventoryItems';
+import InventoryItemDetail from './pages/InventoryItemDetail';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -86,6 +89,9 @@ const App: React.FC = () => {
             <Route path="death-records/new" element={<DeathRecordForm />} />
             <Route path="death-records/:id/edit" element={<DeathRecordForm />} />
             <Route path="necropsy-reports/:id" element={<NecropsyReportDetail />} />
+            <Route path="inventory" element={<InventoryOverview />} />
+            <Route path="inventory/items" element={<InventoryItems />} />
+            <Route path="inventory/items/:id" element={<InventoryItemDetail />} />
           </Route>
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
         </Routes>

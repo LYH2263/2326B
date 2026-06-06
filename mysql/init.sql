@@ -293,3 +293,102 @@ INSERT INTO `necropsy_reports` (`death_record_id`, `necropsy_date`, `performed_b
 
 -- 更新已死亡动物状态
 UPDATE `animals` SET `status` = 'deceased' WHERE `id` IN (4, 12);
+
+-- ========================================
+-- 库存物品表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `inventory_items` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL COMMENT '物品名称',
+  `category` ENUM('drug', 'consumable', 'reagent', 'equipment') NOT NULL COMMENT '类别',
+  `specification` VARCHAR(200) DEFAULT NULL COMMENT '规格',
+  `unit` VARCHAR(20) NOT NULL COMMENT '单位',
+  `current_quantity` DECIMAL(12, 2) NOT NULL DEFAULT 0 COMMENT '当前库存数量',
+  `safety_stock` DECIMAL(12, 2) NOT NULL DEFAULT 0 COMMENT '安全库存量',
+  `storage_location` VARCHAR(200) DEFAULT NULL COMMENT '存储位置',
+  `expiry_date` DATE DEFAULT NULL COMMENT '有效期截止日期',
+  `supplier` VARCHAR(200) DEFAULT NULL COMMENT '供应商',
+  `unit_price` DECIMAL(10, 2) DEFAULT NULL COMMENT '单价',
+  `remark` TEXT COMMENT '备注',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_category` (`category`),
+  INDEX `idx_name` (`name`),
+  INDEX `idx_expiry_date` (`expiry_date`),
+  INDEX `idx_supplier` (`supplier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='库存物品表';
+
+-- ========================================
+-- 库存事务表（出入库流水）
+-- ========================================
+CREATE TABLE IF NOT EXISTS `inventory_transactions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `item_id` INT NOT NULL COMMENT '物品ID',
+  `type` ENUM('in', 'out', 'adjust') NOT NULL COMMENT '事务类型',
+  `quantity` DECIMAL(12, 2) NOT NULL COMMENT '数量（正负）',
+  `transaction_date` DATETIME NOT NULL COMMENT '事务日期',
+  `operator` VARCHAR(100) DEFAULT NULL COMMENT '操作人',
+  `experiment_id` INT DEFAULT NULL COMMENT '关联实验ID',
+  `reason` TEXT COMMENT '原因说明',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`item_id`) REFERENCES `inventory_items`(`id`) ON DELETE CASCADE,
+  INDEX `idx_item_id` (`item_id`),
+  INDEX `idx_type` (`type`),
+  INDEX `idx_transaction_date` (`transaction_date`),
+  INDEX `idx_experiment_id` (`experiment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='库存事务表';
+
+-- ========================================
+-- 种子数据：库存物品
+-- ========================================
+INSERT INTO `inventory_items` (`name`, `category`, `specification`, `unit`, `current_quantity`, `safety_stock`, `storage_location`, `expiry_date`, `supplier`, `unit_price`, `remark`) VALUES
+('青霉素钠', 'drug', '100万单位/瓶', '瓶', 45, 20, 'A区-药品柜-1层', '2027-06-30', '国药集团', 25.50, '常规抗生素'),
+('阿莫西林', 'drug', '500mg/片', '盒', 8, 10, 'A区-药品柜-1层', '2026-07-15', '华北制药', 45.00, '库存偏低，需补货'),
+('乙醚', 'drug', '500ml/瓶', '瓶', 12, 5, 'B区-危险品柜', '2028-01-01', '上海化学试剂', 85.00, '麻醉用，需双人双锁管理'),
+('一次性手套', 'consumable', 'M号/100只/盒', '盒', 30, 10, 'C区-耗材架-1层', NULL, '英科医疗', 35.00, '丁腈手套'),
+('离心管', 'consumable', '1.5ml/500支/包', '包', 15, 5, 'C区-耗材架-2层', NULL, '爱思进', 120.00, '无菌无酶'),
+('培养皿', 'consumable', '90mm/20个/包', '包', 8, 5, 'C区-耗材架-3层', NULL, '康宁', 95.00, '塑料培养皿'),
+('PBS缓冲液', 'reagent', '500ml/瓶', '瓶', 25, 8, 'D区-试剂柜-常温', '2026-08-20', '赛默飞世尔', 65.00, 'pH7.4'),
+('DMEM培养基', 'reagent', '500ml/瓶', '瓶', 6, 10, 'D区-试剂柜-4℃', '2026-06-25', 'Gibco', 180.00, '含10%FBS，即将过期'),
+('胎牛血清', 'reagent', '100ml/瓶', '瓶', 3, 5, 'E区-冰箱-20℃', '2026-12-31', 'Gibco', 980.00, '特级胎牛血清'),
+('移液器', 'equipment', '10-100μl', '支', 8, 2, 'F区-仪器柜', NULL, 'Eppendorf', 2500.00, '单道可调移液器'),
+('分析天平', 'equipment', '0.1mg/220g', '台', 2, 1, 'G区-天平室', NULL, '梅特勒', 15000.00, '万分之一分析天平'),
+('高压灭菌锅', 'equipment', '50L', '台', 1, 1, 'H区-消毒室', NULL, '日本三洋', 35000.00, '全自动高压灭菌器'),
+('75%酒精', 'consumable', '500ml/瓶', '瓶', 40, 15, 'C区-耗材架-4层', '2027-03-15', '国药集团', 15.00, '消毒用酒精'),
+('EDTA', 'reagent', '500g/瓶', '瓶', 2, 3, 'D区-试剂柜-常温', '2029-01-01', 'Sigma', 280.00, '螯合剂'),
+('显微镜', 'equipment', '正置荧光显微镜', '台', 1, 0, 'I区-细胞室', NULL, '奥林巴斯', 120000.00, '研究级显微镜'),
+('生理盐水', 'drug', '500ml/瓶', '瓶', 5, 10, 'A区-药品柜-2层', '2026-06-10', '四川科伦', 8.50, '库存不足且即将过期');
+
+-- ========================================
+-- 种子数据：库存事务流水
+-- ========================================
+INSERT INTO `inventory_transactions` (`item_id`, `type`, `quantity`, `transaction_date`, `operator`, `experiment_id`, `reason`) VALUES
+(1, 'in', 50, '2026-01-10 09:00:00', '库管员小王', NULL, '新采购入库'),
+(1, 'out', -5, '2026-02-15 14:30:00', '李研究员', 1, '实验项目使用'),
+(2, 'in', 20, '2026-01-05 10:00:00', '库管员小王', NULL, '期初库存'),
+(2, 'out', -12, '2026-03-20 11:00:00', '张医生', NULL, '日常治疗使用'),
+(3, 'in', 10, '2026-01-08 09:30:00', '库管员小王', NULL, '采购入库'),
+(3, 'out', 2, '2026-04-10 15:00:00', '赵教授', 3, '实验麻醉用'),
+(4, 'in', 50, '2026-01-01 08:00:00', '库管员小王', NULL, '期初库存'),
+(4, 'out', -20, '2026-02-28 10:00:00', '实验室全员', NULL, '日常消耗'),
+(5, 'in', 20, '2026-01-15 09:00:00', '库管员小王', NULL, '采购入库'),
+(5, 'out', -5, '2026-03-05 14:00:00', '陈博士', 1, '分子生物学实验'),
+(6, 'in', 15, '2026-01-20 10:00:00', '库管员小王', NULL, '采购入库'),
+(6, 'out', -7, '2026-04-01 09:30:00', '吴副教授', 4, '细胞培养实验'),
+(7, 'in', 30, '2026-01-10 08:30:00', '库管员小王', NULL, '采购入库'),
+(7, 'out', -5, '2026-03-10 11:00:00', '李研究员', NULL, '缓冲液配制'),
+(8, 'in', 10, '2026-01-12 10:00:00', '库管员小王', NULL, '采购入库'),
+(8, 'out', -4, '2026-04-05 09:00:00', '陈博士', 1, '细胞换液'),
+(9, 'in', 5, '2026-01-08 09:00:00', '库管员小王', NULL, '采购入库'),
+(9, 'out', -2, '2026-02-15 10:30:00', '吴副教授', 4, '细胞培养'),
+(10, 'in', 10, '2026-01-05 09:00:00', '库管员小王', NULL, '设备验收入库'),
+(11, 'in', 2, '2025-12-20 10:00:00', '库管员小王', NULL, '设备采购入库'),
+(12, 'in', 1, '2025-11-10 09:00:00', '库管员小王', NULL, '设备采购入库'),
+(13, 'in', 50, '2026-01-01 08:00:00', '库管员小王', NULL, '期初库存'),
+(13, 'out', -10, '2026-03-15 14:00:00', '实验室全员', NULL, '日常消毒消耗'),
+(14, 'in', 5, '2026-01-18 10:00:00', '库管员小王', NULL, '采购入库'),
+(14, 'out', -3, '2026-04-02 09:30:00', '李研究员', NULL, '缓冲液配制'),
+(15, 'in', 1, '2025-10-15 09:00:00', '库管员小王', NULL, '大型设备入库'),
+(16, 'in', 15, '2026-01-02 08:00:00', '库管员小王', NULL, '期初库存'),
+(16, 'out', -10, '2026-03-20 11:00:00', '张医生', NULL, '日常使用');
+

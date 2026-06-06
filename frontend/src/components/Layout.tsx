@@ -15,6 +15,7 @@ import {
   LogoutOutlined,
   SwapOutlined,
   FileTextOutlined,
+  MedicineBoxOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
@@ -27,6 +28,7 @@ const menuItems = [
   { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
   { key: '/experiments', icon: <ExperimentOutlined />, label: '实验项目' },
   { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },
+  { key: '/inventory', icon: <MedicineBoxOutlined />, label: '库存管理' },
   { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },
   { key: '/statistics', icon: <BarChartOutlined />, label: '数据统计' },
 ];
@@ -50,6 +52,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
     if (path.startsWith('/death-records')) return '/death-records';
     if (path.startsWith('/necropsy-reports')) return '/death-records';
     if (path.startsWith('/animal-transfers')) return '/animal-transfers';
+    if (path.startsWith('/inventory')) return '/inventory';
     return path;
   };
 
@@ -61,6 +64,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       }
       if (item.key === '/animal-transfers') {
         return path.startsWith('/animal-transfers');
+      }
+      if (item.key === '/inventory') {
+        return path.startsWith('/inventory');
       }
       return item.key === path;
     });

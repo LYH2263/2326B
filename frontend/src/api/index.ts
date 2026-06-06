@@ -121,6 +121,23 @@ export const deathRecordApi = {
   getStatsByNecropsyStatus: () => api.get('/death-records/stats/by-necropsy-status'),
 };
 
+// ========== 库存管理 API ==========
+export const inventoryApi = {
+  getItems: (params?: any) => api.get('/inventory/items', { params }),
+  getItemDetail: (id: number) => api.get(`/inventory/items/${id}`),
+  getItemDetailWithTransactions: (id: number, params?: any) =>
+    api.get(`/inventory/items/${id}/detail`, { params }),
+  createItem: (data: any) => api.post('/inventory/items', data),
+  updateItem: (id: number, data: any) => api.patch(`/inventory/items/${id}`, data),
+  deleteItem: (id: number) => api.delete(`/inventory/items/${id}`),
+  getWarnings: () => api.get('/inventory/items/warnings'),
+  getCategorySummary: () => api.get('/inventory/items/category-summary'),
+  getStockTrend: (id: number, days?: number) =>
+    api.get(`/inventory/items/${id}/trend`, { params: { days } }),
+  createTransaction: (data: any) => api.post('/inventory/transactions', data),
+  getTransactions: (params?: any) => api.get('/inventory/transactions', { params }),
+};
+
 // ========== 尸检报告 API ==========
 export const necropsyReportApi = {
   getList: () => api.get('/necropsy-reports'),
