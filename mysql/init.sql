@@ -108,6 +108,74 @@ CREATE TABLE IF NOT EXISTS `experiment_animals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='实验-动物关联表';
 
 -- ========================================
+-- 种子数据：实验-动物关联
+-- ========================================
+INSERT INTO `experiment_animals` (`experiment_id`, `animal_id`, `role`, `join_date`, `leave_date`, `notes`) VALUES
+(1, 3, 'treatment_group', '2025-11-01', NULL, '治疗组 - 高剂量'),
+(1, 4, 'control_group', '2025-11-01', NULL, '对照组 - 溶媒对照'),
+(2, 6, 'treatment_group', '2025-10-15', NULL, '治疗组 - 中剂量'),
+(3, 8, 'treatment_group', '2025-12-01', NULL, '模型组'),
+(5, 11, 'treatment_group', '2025-09-01', '2025-12-30', '治疗组'),
+(5, 12, 'control_group', '2025-09-01', '2025-12-30', '对照组');
+
+-- ========================================
+-- 实验里程碑表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `experiment_milestones` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `experiment_id` INT NOT NULL COMMENT '实验ID',
+  `name` VARCHAR(200) NOT NULL COMMENT '里程碑名称',
+  `planned_date` DATE NOT NULL COMMENT '计划日期',
+  `actual_date` DATE DEFAULT NULL COMMENT '实际完成日期',
+  `status` ENUM('pending', 'completed', 'overdue') NOT NULL DEFAULT 'pending' COMMENT '状态',
+  `assignee` VARCHAR(100) DEFAULT NULL COMMENT '负责人',
+  `notes` TEXT COMMENT '备注',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`experiment_id`) REFERENCES `experiments`(`id`) ON DELETE CASCADE,
+  INDEX `idx_experiment_id` (`experiment_id`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_planned_date` (`planned_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='实验里程碑表';
+
+-- ========================================
+-- 种子数据：实验里程碑
+-- ========================================
+INSERT INTO `experiment_milestones` (`experiment_id`, `name`, `planned_date`, `actual_date`, `status`, `assignee`, `notes`) VALUES
+(1, '实验方案设计与审批', '2025-10-15', '2025-10-20', 'completed', '陈博士', 'IACUC审批通过'),
+(1, '动物分组与适应期', '2025-11-01', '2025-11-05', 'completed', '李技术员', '小鼠适应环境7天'),
+(1, '肿瘤细胞接种', '2025-11-10', '2025-11-12', 'completed', '陈博士', '皮下接种完成'),
+(1, '给药开始', '2025-11-20', '2025-11-21', 'completed', '李技术员', '每日一次腹腔注射'),
+(1, '中期肿瘤测量', '2025-12-20', NULL, 'pending', '陈博士', '每3天测量一次肿瘤体积'),
+(1, '末期解剖与样本采集', '2026-02-15', NULL, 'pending', '王实验员', '主要脏器称重与固定'),
+(1, '数据统计与报告撰写', '2026-02-25', NULL, 'pending', '陈博士', '撰写最终研究报告'),
+(2, '预实验与剂量确定', '2025-10-01', '2025-10-10', 'completed', '刘研究员', '确定高/中/低三个剂量组'),
+(2, '正式实验动物购入', '2025-10-15', '2025-10-16', 'completed', '张采购', 'SPF级SD大鼠40只'),
+(2, '28天重复给药', '2025-11-01', NULL, 'pending', '李技术员', '每天同一时间灌胃给药'),
+(2, '血液生化检测', '2026-01-20', NULL, 'pending', '王检测员', '检测肝肾功能等20项指标'),
+(2, '组织病理学检查', '2026-02-01', NULL, 'pending', '赵病理师', '主要脏器HE染色'),
+(2, '总结报告', '2026-02-15', NULL, 'pending', '刘研究员', 'GLP规范总结报告'),
+(3, '文献调研与方案设计', '2025-11-01', '2025-11-20', 'completed', '赵教授', '确定Aβ注射造模方案'),
+(3, '手术造模', '2025-12-01', '2025-12-05', 'completed', '钱博士', '双侧海马注射Aβ1-42'),
+(3, '行为学测试-水迷宫', '2026-02-01', NULL, 'pending', '钱博士', 'Morris水迷宫测试学习记忆'),
+(3, '行为学测试-旷场', '2026-03-01', NULL, 'pending', '孙实验员', '旷场实验检测自发活动'),
+(3, '脑组织取材', '2026-05-01', NULL, 'pending', '钱博士', '灌注固定取脑'),
+(3, '免疫组化分析', '2026-05-20', NULL, 'pending', '李技术员', '检测Aβ斑块与tau磷酸化'),
+(3, '论文撰写', '2026-06-01', NULL, 'pending', '赵教授', '目标投稿Neurobiology of Aging'),
+(4, '疫苗配方优化', '2026-01-15', NULL, 'pending', '吴副教授', '纳米佐剂配方筛选'),
+(4, '动物免疫方案制定', '2026-02-15', NULL, 'pending', '吴副教授', '确定免疫程序和剂量'),
+(4, '免疫接种', '2026-03-01', NULL, 'pending', '郑实验员', '皮下免疫3次'),
+(4, '抗体滴度检测', '2026-04-15', NULL, 'pending', '王检测员', 'ELISA检测特异性抗体'),
+(4, '细胞免疫检测', '2026-05-15', NULL, 'pending', '李研究员', 'ELISpot检测IFN-γ分泌'),
+(4, '数据整理与报告', '2026-07-01', NULL, 'pending', '吴副教授', '最终研究报告'),
+(5, '模型建立与验证', '2025-09-01', '2025-09-20', 'completed', '孙研究员', 'DNFB诱导接触性皮炎'),
+(5, '药物疗效评价', '2025-10-01', '2025-11-15', 'completed', '孙研究员', '评分标准：耳肿胀度'),
+(5, '组织病理学检查', '2025-11-20', '2025-12-01', 'completed', '赵病理师', '皮肤组织HE染色'),
+(5, '细胞因子检测', '2025-12-10', '2025-12-20', 'completed', '李检测员', 'ELISA检测IL-4、IFN-γ'),
+(5, '数据统计分析', '2025-12-25', '2025-12-28', 'completed', '统计师小王', 'GraphPad Prism分析'),
+(5, '研究报告撰写', '2025-12-30', '2025-12-30', 'completed', '孙研究员', '项目结题报告');
+
+-- ========================================
 -- 饲养记录表
 -- ========================================
 CREATE TABLE IF NOT EXISTS `feeding_records` (

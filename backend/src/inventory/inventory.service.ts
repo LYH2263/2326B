@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { InventoryItem } from './entities/inventory-item.entity';
 import { InventoryTransaction } from './entities/inventory-transaction.entity';
 import { CreateInventoryItemDto } from './dto/create-inventory-item.dto';

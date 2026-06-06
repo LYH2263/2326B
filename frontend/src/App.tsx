@@ -16,6 +16,7 @@ import NecropsyReportDetail from './pages/NecropsyReportDetail';
 import InventoryOverview from './pages/InventoryOverview';
 import InventoryItems from './pages/InventoryItems';
 import InventoryItemDetail from './pages/InventoryItemDetail';
+import ProjectProgress from './pages/ProjectProgress';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -83,6 +84,7 @@ const App: React.FC = () => {
             <Route path="animal-transfers" element={<AnimalTransfers />} />
             <Route path="health" element={<HealthRecords />} />
             <Route path="experiments" element={<Experiments />} />
+            <Route path="project-progress" element={<ProjectProgress />} />
             <Route path="feeding" element={<FeedingRecords />} />
             <Route path="statistics" element={<Statistics />} />
             <Route path="death-records" element={<DeathRecords />} />

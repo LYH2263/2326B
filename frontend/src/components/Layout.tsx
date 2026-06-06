@@ -16,6 +16,7 @@ import {
   SwapOutlined,
   FileTextOutlined,
   MedicineBoxOutlined,
+  FundViewOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
@@ -27,6 +28,7 @@ const menuItems = [
   { key: '/animal-transfers', icon: <SwapOutlined />, label: '转移借调' },
   { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
   { key: '/experiments', icon: <ExperimentOutlined />, label: '实验项目' },
+  { key: '/project-progress', icon: <FundViewOutlined />, label: '项目进度' },
   { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },
   { key: '/inventory', icon: <MedicineBoxOutlined />, label: '库存管理' },
   { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },

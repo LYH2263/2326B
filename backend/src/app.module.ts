@@ -9,6 +9,7 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { AnimalTransfersModule } from './animal-transfers/animal-transfers.module';
 import { DeathRecordsModule } from './death-records/death-records.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { ExperimentMilestonesModule } from './experiment-milestones/experiment-milestones.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { InventoryModule } from './inventory/inventory.module';
     AnimalTransfersModule,
     DeathRecordsModule,
     InventoryModule,
+    ExperimentMilestonesModule,
   ],
 })
 export class AppModule {}

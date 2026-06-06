@@ -79,6 +79,18 @@ export const experimentApi = {
   removeAnimal: (id: number) => api.delete(`/experiments/animals/${id}`),
 };
 
+// ========== 实验里程碑 API ==========
+export const milestoneApi = {
+  getList: (params?: any) => api.get('/experiment-milestones', { params }),
+  getByExperimentId: (experimentId: number) =>
+    api.get(`/experiment-milestones/experiment/${experimentId}`),
+  getDetail: (id: number) => api.get(`/experiment-milestones/${id}`),
+  create: (data: any) => api.post('/experiment-milestones', data),
+  update: (id: number, data: any) => api.patch(`/experiment-milestones/${id}`, data),
+  delete: (id: number) => api.delete(`/experiment-milestones/${id}`),
+  getGanttData: (params?: any) => api.get('/experiment-milestones/gantt/data', { params }),
+};
+
 // ========== 饲养记录 API ==========
 export const feedingApi = {
   getList: (params?: any) => api.get('/feeding-records', { params }),
