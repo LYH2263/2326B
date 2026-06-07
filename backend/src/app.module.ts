@@ -16,6 +16,7 @@ import { MessagesModule } from './messages/messages.module';
 import { UsersModule } from './users/users.module';
 import { AnimalUsageRequestsModule } from './animal-usage-requests/animal-usage-requests.module';
 import { AnimalPhotosModule } from './animal-photos/animal-photos.module';
+import { BackupModule } from './backup/backup.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { AnimalPhotosModule } from './animal-photos/animal-photos.module';
     WeightRecordsModule,
     AnimalUsageRequestsModule,
     AnimalPhotosModule,
+    BackupModule,
   ],
 })
 export class AppModule {}

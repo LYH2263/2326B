@@ -233,6 +233,21 @@ export const animalUsageRequestApi = {
   getTimeline: (id: number) => api.get(`/animal-usage-requests/${id}/timeline`),
 };
 
+// ========== 数据备份与恢复 API ==========
+export const backupApi = {
+  createBackup: () => api.post('/backup/create'),
+  getRecords: (params?: any) => api.get('/backup/records', { params }),
+  getRecordDetail: (id: number) => api.get(`/backup/records/${id}`),
+  downloadBackup: (id: number) => `/api/backup/download/${id}`,
+  restoreBackup: (id: number, confirmText: string) =>
+    api.post(`/backup/restore/${id}`, { confirmText }),
+  cleanupOldBackups: (days: number) => api.post('/backup/cleanup', { days }),
+  deleteBackup: (id: number) => api.delete(`/backup/records/${id}`),
+  getStatus: () => api.get('/backup/status'),
+  setAutoBackupConfig: (config: { enabled: boolean; hour?: number; minute?: number }) =>
+    api.post('/backup/auto-backup/config', config),
+};
+
 // ========== 动物图片管理 API ==========
 export const animalPhotoApi = {
   upload: (animalId: number, formData: FormData) =>

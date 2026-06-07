@@ -658,3 +658,21 @@ CREATE TABLE IF NOT EXISTS `animal_photos` (
   INDEX `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='动物图片表';
 
+-- ========================================
+-- 备份记录表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `backup_records` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `file_name` VARCHAR(255) NOT NULL COMMENT '文件名',
+  `file_path` VARCHAR(500) NOT NULL COMMENT '文件路径',
+  `file_size` BIGINT NOT NULL DEFAULT 0 COMMENT '文件大小(bytes)',
+  `backup_type` ENUM('auto', 'manual') NOT NULL DEFAULT 'manual' COMMENT '备份类型',
+  `status` ENUM('success', 'failed', 'running') NOT NULL DEFAULT 'running' COMMENT '备份状态',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `duration_ms` BIGINT NOT NULL DEFAULT 0 COMMENT '备份耗时(ms)',
+  `remark` TEXT COMMENT '备注',
+  INDEX `idx_backup_type` (`backup_type`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='备份记录表';
+

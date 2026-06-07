@@ -25,6 +25,7 @@ import {
   AuditOutlined,
   PictureOutlined,
   DesktopOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons';
 import { messageApi } from '../api';
 
@@ -82,6 +83,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       ? [
           { key: '/announcements', icon: <NotificationOutlined />, label: '公告管理' },
           { key: '/animal-usage-requests/approval', icon: <AuditOutlined />, label: '申请审批' },
+          { key: '/backup', icon: <DatabaseOutlined />, label: '数据备份' },
         ]
       : []),
   ];

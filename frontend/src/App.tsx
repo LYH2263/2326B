@@ -27,6 +27,7 @@ import UsageRequestDetail from './pages/UsageRequestDetail';
 import AnimalDetail from './pages/AnimalDetail';
 import PhotoLibrary from './pages/PhotoLibrary';
 import Workstation from './pages/Workstation';
+import BackupManage from './pages/BackupManage';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -114,6 +115,7 @@ const App: React.FC = () => {
             <Route path="animal-usage-requests" element={<MyUsageRequests />} />
             <Route path="animal-usage-requests/approval" element={<UsageRequestApproval />} />
             <Route path="animal-usage-requests/:id" element={<UsageRequestDetail />} />
+            <Route path="backup" element={<BackupManage />} />
           </Route>
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
         </Routes>
