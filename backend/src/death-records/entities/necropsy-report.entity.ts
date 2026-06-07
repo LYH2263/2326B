@@ -29,7 +29,7 @@ export class NecropsyReport {
   @Column({ name: 'histopathology_findings', type: 'text', nullable: true })
   histopathologyFindings: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'final_diagnosis', type: 'text', nullable: true })
   finalDiagnosis: string;
 
   @Column({ name: 'image_urls', type: 'json', nullable: true })

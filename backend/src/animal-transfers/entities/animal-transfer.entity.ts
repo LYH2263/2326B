@@ -27,6 +27,7 @@ export class AnimalTransfer {
   toDepartment: string;
 
   @Column({
+    name: 'reason',
     type: 'enum',
     enum: ['experiment_borrow', 'permanent_transfer', 'return_to_supplier'],
   })
@@ -42,6 +43,7 @@ export class AnimalTransfer {
   actualReturnDate: Date;
 
   @Column({
+    name: 'status',
     type: 'enum',
     enum: ['pending', 'in_transit', 'completed', 'returned'],
     default: 'pending',

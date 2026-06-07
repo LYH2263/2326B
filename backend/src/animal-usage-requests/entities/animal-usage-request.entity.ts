@@ -37,6 +37,7 @@ export class AnimalUsageRequest {
   quantity: number;
 
   @Column({
+    name: 'gender_requirement',
     type: 'enum',
     enum: ['male', 'female', 'any'],
     default: 'any',
@@ -59,6 +60,7 @@ export class AnimalUsageRequest {
   endDate: Date;
 
   @Column({
+    name: 'status',
     type: 'enum',
     enum: ['draft', 'submitted', 'approved', 'rejected', 'withdrawn'],
     default: 'draft',

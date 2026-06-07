@@ -23,12 +23,13 @@ export class DeathRecord {
   deathDatetime: Date;
 
   @Column({
+    name: 'cause_category',
     type: 'enum',
     enum: ['natural', 'experiment_termination', 'accidental', 'euthanasia'],
   })
   causeCategory: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'cause_description', type: 'text', nullable: true })
   causeDescription: string;
 
   @Column({ name: 'found_by', length: 100, nullable: true })
@@ -38,12 +39,14 @@ export class DeathRecord {
   confirmingVet: string;
 
   @Column({
+    name: 'disposal_method',
     type: 'enum',
     enum: ['necropsy', 'incineration', 'cryopreservation'],
   })
   disposalMethod: string;
 
   @Column({
+    name: 'necropsy_status',
     type: 'enum',
     enum: ['not_needed', 'pending', 'completed'],
     default: 'not_needed',
