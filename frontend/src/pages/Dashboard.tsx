@@ -151,6 +151,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
+      {/* Announcement Bar */}
+      <AnnouncementBar />
+
       {/* Welcome Banner */}
       <Card
         style={{

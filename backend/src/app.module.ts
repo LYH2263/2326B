@@ -11,6 +11,9 @@ import { DeathRecordsModule } from './death-records/death-records.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { ExperimentMilestonesModule } from './experiment-milestones/experiment-milestones.module';
 import { WeightRecordsModule } from './weight-records/weight-records.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
+import { MessagesModule } from './messages/messages.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [

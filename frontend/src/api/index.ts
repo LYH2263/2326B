@@ -186,4 +186,31 @@ export const weightApi = {
     api.get('/weight-records/statistics/group', { params }),
 };
 
+// ========== 公告 API ==========
+export const announcementApi = {
+  getList: (params?: any) => api.get('/announcements', { params }),
+  getPublished: (params?: any) => api.get('/announcements/published', { params }),
+  getLatest: (limit?: number) => api.get('/announcements/latest', { params: { limit } }),
+  getDetail: (id: number) => api.get(`/announcements/${id}`),
+  create: (data: any) => api.post('/announcements', data),
+  update: (id: number, data: any) => api.patch(`/announcements/${id}`, data),
+  delete: (id: number) => api.delete(`/announcements/${id}`),
+};
+
+// ========== 站内信 API ==========
+export const messageApi = {
+  send: (data: any) => api.post('/messages', data),
+  getInbox: (params?: any) => api.get('/messages/inbox', { params }),
+  getOutbox: (params?: any) => api.get('/messages/outbox', { params }),
+  getUnreadCount: () => api.get('/messages/unread-count'),
+  getDetail: (id: number) => api.get(`/messages/${id}`),
+  markAsRead: (id: number) => api.patch(`/messages/${id}/read`),
+  batchMarkRead: (ids: number[]) => api.post('/messages/batch-read', { ids }),
+};
+
+// ========== 用户 API ==========
+export const userApi = {
+  getList: (params?: any) => api.get('/users', { params }),
+};
+
 export default api;

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Typography, theme, Button, Drawer, Dropdown, Avatar, Space } from 'antd';
+import { Layout, Menu, Typography, theme, Button, Drawer, Dropdown, Avatar, Space, Badge } from 'antd';
 import {
   DashboardOutlined,
   ExperimentOutlined,
@@ -18,24 +18,14 @@ import {
   MedicineBoxOutlined,
   FundViewOutlined,
   FieldNumberOutlined,
+  BellOutlined,
+  MessageOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons';
+import { messageApi } from '../api';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
-
-const menuItems = [
-  { key: '/dashboard', icon: <DashboardOutlined />, label: '系统首页' },
-  { key: '/animals', icon: <BugOutlined />, label: '动物管理' },
-  { key: '/animal-transfers', icon: <SwapOutlined />, label: '转移借调' },
-  { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
-  { key: '/experiments', icon: <ExperimentOutlined />, label: '实验项目' },
-  { key: '/project-progress', icon: <FundViewOutlined />, label: '项目进度' },
-  { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },
-  { key: '/weight', icon: <FieldNumberOutlined />, label: '称重记录' },
-  { key: '/inventory', icon: <MedicineBoxOutlined />, label: '库存管理' },
-  { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },
-  { key: '/statistics', icon: <BarChartOutlined />, label: '数据统计' },
-];
 
 interface MainLayoutProps {
   user?: { username: string; name: string; role: string } | null;
@@ -45,11 +35,46 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = theme.useToken();
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const res: any = await messageApi.getUnreadCount();
+        setUnreadCount(res.count || 0);
+      } catch {
+        // error handled
+      }
+    };
+    if (user) {
+      fetchUnreadCount();
+      const timer = setInterval(fetchUnreadCount, 30000);
+      return () => clearInterval(timer);
+    }
+  }, [user]);
+
+  const menuItems = [
+    { key: '/dashboard', icon: <DashboardOutlined />, label: '系统首页' },
+    { key: '/animals', icon: <BugOutlined />, label: '动物管理' },
+    { key: '/animal-transfers', icon: <SwapOutlined />, label: '转移借调' },
+    { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
+    { key: '/experiments', icon: <ExperimentOutlined />, label: '实验项目' },
+    { key: '/project-progress', icon: <FundViewOutlined />, label: '项目进度' },
+    { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },
+    { key: '/weight', icon: <FieldNumberOutlined />, label: '称重记录' },
+    { key: '/inventory', icon: <MedicineBoxOutlined />, label: '库存管理' },
+    { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },
+    { key: '/statistics', icon: <BarChartOutlined />, label: '数据统计' },
+    { key: '/messages', icon: <MessageOutlined />, label: '站内信' },
+    ...(user?.role === 'admin'
+      ? [{ key: '/announcements', icon: <NotificationOutlined />, label: '公告管理' }]
+      : []),
+  ];
 
   const getSelectedKey = () => {
     const path = location.pathname;
@@ -57,6 +82,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
     if (path.startsWith('/necropsy-reports')) return '/death-records';
     if (path.startsWith('/animal-transfers')) return '/animal-transfers';
     if (path.startsWith('/inventory')) return '/inventory';
+    if (path.startsWith('/messages')) return '/messages';
+    if (path.startsWith('/announcements')) return '/announcements';
     return path;
   };
 
@@ -71,6 +98,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       }
       if (item.key === '/inventory') {
         return path.startsWith('/inventory');
+      }
+      if (item.key === '/messages') {
+        return path.startsWith('/messages');
+      }
+      if (item.key === '/announcements') {
+        return path.startsWith('/announcements');
       }
       return item.key === path;
     });
@@ -209,7 +242,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {user && (
-              <Dropdown menu={userDropdownItems} placement="bottomRight" trigger={['click']}>
+              <>
+                <Badge count={unreadCount} size="small" offset={[-2, 2]}>
+                  <Button
+                    type="text"
+                    icon={<BellOutlined style={{ fontSize: 18 }} />}
+                    onClick={() => navigate('/messages')}
+                    style={{ fontSize: 18 }}
+                  />
+                </Badge>
+                <Dropdown menu={userDropdownItems} placement="bottomRight" trigger={['click']}>
                 <Space style={{ cursor: 'pointer', padding: '4px 8px', borderRadius: 8, transition: 'background 0.2s' }}>
                   <Avatar
                     size={32}
@@ -224,6 +266,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
                   </span>
                 </Space>
               </Dropdown>
+              </>
             )}
           </div>
         </Header>

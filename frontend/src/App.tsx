@@ -18,6 +18,9 @@ import InventoryItems from './pages/InventoryItems';
 import InventoryItemDetail from './pages/InventoryItemDetail';
 import ProjectProgress from './pages/ProjectProgress';
 import WeightRecords from './pages/WeightRecords';
+import MessageInbox from './pages/MessageInbox';
+import ComposeMessage from './pages/ComposeMessage';
+import AnnouncementManage from './pages/AnnouncementManage';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -96,6 +99,9 @@ const App: React.FC = () => {
             <Route path="inventory" element={<InventoryOverview />} />
             <Route path="inventory/items" element={<InventoryItems />} />
             <Route path="inventory/items/:id" element={<InventoryItemDetail />} />
+            <Route path="messages" element={<MessageInbox />} />
+            <Route path="messages/compose" element={<ComposeMessage />} />
+            <Route path="announcements" element={<AnnouncementManage />} />
           </Route>
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
         </Routes>

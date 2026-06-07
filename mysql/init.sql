@@ -522,3 +522,75 @@ INSERT INTO `weight_records` (`animal_id`, `weigh_date`, `weigh_time`, `weight`,
 (12, '2026-01-05', '14:35:00', 378.00, '小李', 'GP-001', '豚鼠周重'),
 (12, '2026-01-10', '14:40:00', 380.00, '小李', 'GP-001', '死亡前最后一次称重');
 
+-- ========================================
+-- 种子数据：更多用户
+-- ========================================
+INSERT IGNORE INTO `users` (`username`, `password`, `name`, `role`) VALUES
+('zhangsan', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '张三', 'user'),
+('lisi', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '李四', 'user'),
+('wangwu', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '王五', 'user');
+
+-- ========================================
+-- 公告表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `announcements` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(200) NOT NULL COMMENT '公告标题',
+  `content` TEXT NOT NULL COMMENT '公告内容（富文本）',
+  `type` ENUM('notice', 'warning', 'update') NOT NULL DEFAULT 'notice' COMMENT '公告类型',
+  `publisher_id` INT NOT NULL COMMENT '发布人ID',
+  `publish_time` TIMESTAMP NULL DEFAULT NULL COMMENT '发布时间',
+  `is_pinned` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否置顶',
+  `status` ENUM('draft', 'published', 'archived') NOT NULL DEFAULT 'draft' COMMENT '状态',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`publisher_id`) REFERENCES `users`(`id`),
+  INDEX `idx_type` (`type`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_publish_time` (`publish_time`),
+  INDEX `idx_is_pinned` (`is_pinned`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='公告表';
+
+-- ========================================
+-- 种子数据：公告
+-- ========================================
+INSERT INTO `announcements` (`title`, `content`, `type`, `publisher_id`, `publish_time`, `is_pinned`, `status`) VALUES
+('系统维护通知', '<p>各位用户您好：</p><p>系统将于<strong>2026年2月15日 22:00-24:00</strong>进行例行维护升级，期间系统将暂停服务。</p><p>给您带来的不便，敬请谅解！</p>', 'notice', 1, '2026-01-20 10:00:00', 1, 'published'),
+('新型冠状病毒疫苗研究进展', '<p>我室新型疫苗佐剂免疫原性研究项目取得重要进展，抗体滴度较对照组提升3倍。</p><p>详细数据请查看实验项目 EXP-2025-004。</p>', 'update', 1, '2026-01-18 14:30:00', 0, 'published'),
+('动物饲养安全警示', '<p>近日发现个别笼位出现饲料霉变情况，请各饲养员加强日常巡检，发现问题及时上报。</p><p style=\"color:red;\"><strong>注意：</strong>霉变饲料严禁继续饲喂！</p>', 'warning', 1, '2026-01-15 09:00:00', 0, 'published'),
+('新功能上线：消息通知系统', '<p>系统新增站内信功能，您可以：</p><ul><li>接收系统通知</li><li>与其他用户互发消息</li><li>关联动物或实验资源</li></ul><p>欢迎体验新功能！</p>', 'update', 1, '2026-01-10 16:00:00', 0, 'published');
+
+-- ========================================
+-- 站内信表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `sender_id` INT NOT NULL COMMENT '发送人ID',
+  `receiver_id` INT NOT NULL COMMENT '接收人ID',
+  `title` VARCHAR(200) NOT NULL COMMENT '消息标题',
+  `content` TEXT NOT NULL COMMENT '消息内容',
+  `is_read` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否已读',
+  `send_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
+  `related_type` VARCHAR(50) DEFAULT NULL COMMENT '关联资源类型',
+  `related_id` INT DEFAULT NULL COMMENT '关联资源ID',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`sender_id`) REFERENCES `users`(`id`),
+  FOREIGN KEY (`receiver_id`) REFERENCES `users`(`id`),
+  INDEX `idx_sender_id` (`sender_id`),
+  INDEX `idx_receiver_id` (`receiver_id`),
+  INDEX `idx_is_read` (`is_read`),
+  INDEX `idx_send_time` (`send_time`),
+  INDEX `idx_related` (`related_type`, `related_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='站内信表';
+
+-- ========================================
+-- 种子数据：站内信
+-- ========================================
+INSERT INTO `messages` (`sender_id`, `receiver_id`, `title`, `content`, `is_read`, `send_time`, `related_type`, `related_id`) VALUES
+(1, 2, '欢迎使用动物管理系统', '欢迎您加入实验室动物信息管理系统！如有问题请联系管理员。', 1, '2026-01-05 09:00:00', NULL, NULL),
+(1, 3, '实验进度提醒', '您好，SD大鼠慢性毒性试验项目已进入关键阶段，请按时完成每日记录。', 0, '2026-01-20 10:30:00', 'experiment', 2),
+(2, 1, '关于动物编号M-003的状态更新', '管理员您好，动物M-003状态更新为实验中，请知悉。', 1, '2026-01-18 15:00:00', 'animal', 3),
+(3, 2, '称重数据提醒', '张三你好，请及时录入本周的大鼠称重数据，谢谢！', 0, '2026-01-22 08:30:00', NULL, NULL),
+(1, 4, '系统新功能通知', '系统已上线消息通知功能，您现在可以通过站内信接收重要通知。', 0, '2026-01-21 11:00:00', NULL, NULL),
+(2, 3, '实验动物申请', '李四你好，我需要申请使用2只C57BL/6小鼠进行预实验，请问近期是否有空余？', 0, '2026-01-22 14:00:00', 'experiment', 1);
+
