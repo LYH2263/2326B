@@ -241,11 +241,11 @@ const DeathRecordForm: React.FC = () => {
                   showSearch
                   optionFilterProp="children"
                   placeholder="选择动物"
-                  disabled={isEdit}
+                  disabled={!!isEdit}
                   onChange={handleAnimalChange}
                 >
                   {animals.map(a => (
-                    <Option key={a.id} value={a.id} disabled={a.status === 'deceased' && !isEdit}>
+                    <Option key={a.id} value={a.id} disabled={a.status === 'deceased' && !isEdit ? true : undefined}>
                       {a.name} ({a.species}) {a.status === 'deceased' && !isEdit && ' - 已死亡'}
                     </Option>
                   ))}

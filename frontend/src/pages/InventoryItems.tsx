@@ -258,7 +258,7 @@ const InventoryItems: React.FC = () => {
       title: '操作',
       key: 'action',
       width: 200,
-      fixed: 'right',
+      fixed: 'right' as const,
       render: (_: any, record: any) => (
         <Space size="small">
           <Button type="link" size="small" icon={<EyeOutlined />} onClick={() => navigate(`/inventory/items/${record.id}`)}>

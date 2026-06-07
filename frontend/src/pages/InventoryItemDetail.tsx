@@ -80,7 +80,7 @@ const InventoryItemDetail: React.FC = () => {
   const fetchTrend = async () => {
     if (!id) return;
     try {
-      const data = await inventoryApi.getStockTrend(Number(id), trendDays);
+      const data: any = await inventoryApi.getStockTrend(Number(id), trendDays);
       setTrendData(data || []);
     } catch (error) {
       console.error('Failed to fetch stock trend:', error);

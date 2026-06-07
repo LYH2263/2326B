@@ -49,6 +49,9 @@ import { BackupModule } from './backup/backup.module';
     AnimalUsageRequestsModule,
     AnimalPhotosModule,
     BackupModule,
+    AnnouncementsModule,
+    MessagesModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

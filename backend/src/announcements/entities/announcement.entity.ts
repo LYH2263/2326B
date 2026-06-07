@@ -31,7 +31,7 @@ export class Announcement {
   publisher: User;
 
   @Column({ name: 'publish_time', type: 'timestamp', nullable: true })
-  publishTime: Date;
+  publishTime: Date | null;
 
   @Column({ name: 'is_pinned', type: 'boolean', default: false })
   isPinned: boolean;

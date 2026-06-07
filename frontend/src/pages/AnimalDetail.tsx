@@ -402,7 +402,7 @@ const AnimalDetail: React.FC = () => {
             </Select>
             <RangePicker
               value={dateRange}
-              onChange={(dates) => { setDateRange(dates); setPage(1); }}
+              onChange={(dates: any) => { setDateRange(dates); setPage(1); }}
             />
             <Button icon={<ReloadOutlined />} onClick={() => {
               setSelectedTags([]);

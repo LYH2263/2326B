@@ -33,7 +33,7 @@ export class AnimalPhoto {
   originalFilename: string;
 
   @Column({ name: 'shot_date', type: 'date', nullable: true })
-  shotDate: Date;
+  shotDate: Date | null;
 
   @Column({ type: 'json', nullable: true })
   tags: string[];

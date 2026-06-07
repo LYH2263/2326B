@@ -11,6 +11,7 @@ import {
   ClockCircleOutlined,
 } from '@ant-design/icons';
 import { statisticsApi, animalApi, experimentApi } from '../api';
+import AnnouncementBar from '../components/AnnouncementBar';
 
 const { Title, Text } = Typography;
 

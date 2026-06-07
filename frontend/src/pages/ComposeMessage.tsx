@@ -42,7 +42,7 @@ const ComposeMessage: React.FC = () => {
           animalApi.getList({ pageSize: 50 }),
           experimentApi.getList({ pageSize: 50 }),
         ]);
-        setUsers((usersRes as any[]) || []);
+        setUsers((usersRes as unknown as any[]) || []);
         setAnimals((animalsRes as any)?.list || []);
         setExperiments((experimentsRes as any)?.list || []);
       } catch {

@@ -489,7 +489,6 @@ const WeightAnalysis: React.FC = () => {
                   description={`${(statistics.mean - statistics.stdDev).toFixed(2)}g ~ ${(statistics.mean + statistics.stdDev).toFixed(2)}g (±1 SD)`}
                   type="info"
                   showIcon
-                  size="small"
                   style={{ marginTop: 8 }}
                 />
               </Card>

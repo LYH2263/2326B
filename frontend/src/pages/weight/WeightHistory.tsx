@@ -318,7 +318,7 @@ const WeightHistory: React.FC = () => {
         </Select>
         <RangePicker
           value={dateRange.length > 0 ? dateRange : null as any}
-          onChange={dates => { setDateRange(dates || []); setPage(1); }}
+          onChange={(dates: any) => { setDateRange((dates as any) || []); setPage(1); }}
           style={{ width: 260 }}
         />
         <Input

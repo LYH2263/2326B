@@ -398,7 +398,7 @@ const AnimalTransfers: React.FC = () => {
             placeholder={['开始日期', '结束日期']}
             style={{ width: 280 }}
             value={dateRange}
-            onChange={(dates) => { setDateRange(dates as any); setPage(1); }}
+            onChange={(dates: any) => { setDateRange(dates as any); setPage(1); }}
           />
           <Button
             icon={<ReloadOutlined />}

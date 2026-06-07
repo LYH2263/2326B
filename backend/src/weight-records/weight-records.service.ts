@@ -315,7 +315,7 @@ export class WeightRecordsService {
     const range = max - min;
     const binCount = Math.min(10, Math.max(5, Math.ceil(Math.sqrt(n))));
     const binSize = range / binCount || 1;
-    const distribution = [];
+    const distribution: { binStart: number; binEnd: number; label: string; count: number; percentage: number }[] = [];
 
     for (let i = 0; i < binCount; i++) {
       const binStart = Number((min + i * binSize).toFixed(2));
@@ -373,7 +373,7 @@ export class WeightRecordsService {
       .addOrderBy('animal.id', 'ASC')
       .getMany();
 
-    const result = [];
+    const result: any[] = [];
     for (const animal of animals) {
       const latestRecord = await this.weightRecordRepository.findOne({
         where: { animalId: animal.id },

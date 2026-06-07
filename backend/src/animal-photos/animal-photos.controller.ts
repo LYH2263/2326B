@@ -39,14 +39,15 @@ export class AnimalPhotosController {
     schema: {
       type: 'object',
       properties: {
-      files: {
-        type: 'array',
-        items: { type: 'string', format: 'binary' },
+        files: {
+          type: 'array',
+          items: { type: 'string', format: 'binary' },
+        },
+        shotDate: { type: 'string', format: 'date' },
+        tags: { type: 'string', description: '标签，多个用逗号分隔' },
+        description: { type: 'string' },
+        uploader: { type: 'string' },
       },
-      shotDate: { type: 'string', format: 'date' },
-      tags: { type: 'string', description: '标签，多个用逗号分隔' },
-      description: { type: 'string' },
-      uploader: { type: 'string' },
     },
   })
   @UseInterceptors(
@@ -69,7 +70,7 @@ export class AnimalPhotosController {
 
     const dto: Partial<CreateAnimalPhotoDto> = {
       shotDate: body.shotDate,
-      tags: body.tags ? body.tags.split(',').filter((t: string) => t.trim()),
+      tags: body.tags ? body.tags.split(',').filter((t: string) => t.trim() !== '') : [],
       description: body.description,
       uploader: body.uploader,
     };
@@ -118,7 +119,7 @@ export class AnimalPhotosController {
     @Query('page') page?: number,
     @Query('pageSize') pageSize?: number,
   ) {
-    const tagList = tags ? tags.split(',').filter(t => t.trim());
+    const tagList = tags ? tags.split(',').filter(t => t.trim() !== '') : [];
     return this.animalPhotosService.searchByTags(tagList, page, pageSize);
   }
 

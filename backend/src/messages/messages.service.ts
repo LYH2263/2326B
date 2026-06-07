@@ -109,7 +109,7 @@ export class MessagesService {
       relations: ['sender', 'receiver'],
     });
     if (!message) {
-      throw new NotFoundException(`消息 #${id} 不存在');
+      throw new NotFoundException(`消息 #${id} 不存在`);
     }
     if (message.senderId !== userId && message.receiverId !== userId) {
       throw new ForbiddenException('无权查看此消息');

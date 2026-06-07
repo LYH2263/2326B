@@ -207,7 +207,7 @@ const QuickWeighing: React.FC = () => {
       dataIndex: 'lastWeight',
       key: 'lastWeight',
       width: 130,
-      render: (w?: number | null, record: AnimalItem) => (
+      render: (w: number | null | undefined, record: AnimalItem) => (
         <div>
           {w != null ? w.toFixed(2) : <Text type="secondary">无记录</Text>}
           {record.lastWeighDate && (
@@ -286,7 +286,7 @@ const QuickWeighing: React.FC = () => {
             <Text strong>称重时间：</Text>
             <TimePicker
               value={weighTime}
-              onChange={t => t && setWeighTime(t)}
+              onChange={(t: any) => t && setWeighTime(t)}
               format="HH:mm:ss"
               style={{ width: '100%', marginTop: 4 }}
             />

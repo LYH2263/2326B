@@ -25,7 +25,7 @@ export class AnnouncementsService {
       publishTime:
         createAnnouncementDto.status === 'published' ? new Date() : null,
     });
-    const saved = await this.announcementRepository.save(announcement);
+    const saved = await this.announcementRepository.save(announcement) as Announcement;
     this.logger.log(`Created announcement: ${saved.id} - ${saved.title}`);
     return saved;
   }

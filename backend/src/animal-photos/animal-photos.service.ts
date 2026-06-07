@@ -39,8 +39,8 @@ export class AnimalPhotosService {
     const results: AnimalPhoto[] = [];
 
     for (const file of files) {
+      const originalFilename = file.originalname;
       try {
-        const originalFilename = file.originalname;
         const timestamp = Date.now();
         const randomStr = Math.random().toString(36).substring(2, 10);
         const ext = path.extname(originalFilename).toLowerCase();
@@ -77,7 +77,7 @@ export class AnimalPhotosService {
           uploader: dto.uploader || '',
         });
 
-        const saved = await this.photoRepository.save(photo);
+        const saved = await this.photoRepository.save(photo) as AnimalPhoto;
         results.push(saved);
         this.logger.log(`上传图片成功: ${saved.id} - ${originalFilename}`);
       } catch (error) {

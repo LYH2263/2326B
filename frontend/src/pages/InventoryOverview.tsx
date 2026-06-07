@@ -35,8 +35,8 @@ const InventoryOverview: React.FC = () => {
         inventoryApi.getCategorySummary(),
         inventoryApi.getWarnings(),
       ]);
-      setCategorySummary(summaryRes || []);
-      setWarnings(warnRes || { lowStock: [], expiringSoon: [], total: 0 });
+      setCategorySummary((summaryRes as any) || []);
+      setWarnings((warnRes as any) || { lowStock: [], expiringSoon: [], total: 0 });
     } catch (error) {
       console.error('Failed to fetch inventory overview:', error);
     } finally {

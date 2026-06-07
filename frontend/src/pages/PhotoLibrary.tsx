@@ -363,7 +363,7 @@ const PhotoLibrary: React.FC = () => {
           </Select>
           <RangePicker
             value={dateRange}
-            onChange={(dates) => { setDateRange(dates as any); setPage(1); }}
+            onChange={(dates: any) => { setDateRange(dates as any); setPage(1); }}
           />
           <Button icon={<ReloadOutlined />} onClick={() => {
             setSelectedTags([]);

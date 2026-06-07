@@ -68,7 +68,7 @@ const BackupManage: React.FC = () => {
   const [cleanupDays, setCleanupDays] = useState(30);
   const [statusFilter, setStatusFilter] = useState<string | undefined>();
   const [typeFilter, setTypeFilter] = useState<string | undefined>();
-  const progressTimer = useRef<NodeJS.Timeout | null>(null);
+  const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [form] = Form.useForm();
   const [cleanupForm] = Form.useForm();
 

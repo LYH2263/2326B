@@ -33,7 +33,7 @@ export class ExperimentMilestone {
   })
   status: string;
 
-  @Column({ length: 100, nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   assignee: string | null;
 
   @Column({ type: 'text', nullable: true })

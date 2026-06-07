@@ -192,7 +192,7 @@ export class BackupService implements OnModuleInit {
   }
 
   async findAll(query: QueryBackupDto) {
-    const { page, pageSize, keyword, backupType, status } = query;
+    const { page = 1, pageSize = 10, keyword, backupType, status } = query;
     const skip = (page - 1) * pageSize;
 
     const where: any = {};

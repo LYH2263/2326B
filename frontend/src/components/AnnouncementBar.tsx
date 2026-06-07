@@ -37,7 +37,7 @@ const AnnouncementBar: React.FC = () => {
     const fetchAnnouncements = async () => {
       try {
         const res = await announcementApi.getLatest(5);
-        const list = (res as Announcement[]) || [];
+        const list = (res as unknown as Announcement[]) || [];
         setAnnouncements(list);
       } catch {
         // error handled
