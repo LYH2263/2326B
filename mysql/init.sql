@@ -594,3 +594,46 @@ INSERT INTO `messages` (`sender_id`, `receiver_id`, `title`, `content`, `is_read
 (1, 4, '系统新功能通知', '系统已上线消息通知功能，您现在可以通过站内信接收重要通知。', 0, '2026-01-21 11:00:00', NULL, NULL),
 (2, 3, '实验动物申请', '李四你好，我需要申请使用2只C57BL/6小鼠进行预实验，请问近期是否有空余？', 0, '2026-01-22 14:00:00', 'experiment', 1);
 
+-- ========================================
+-- 动物使用申请表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `animal_usage_requests` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `applicant_id` INT NOT NULL COMMENT '申请人ID',
+  `request_date` DATE NOT NULL COMMENT '申请日期',
+  `experiment_id` INT DEFAULT NULL COMMENT '实验项目ID（可选）',
+  `species` VARCHAR(50) NOT NULL COMMENT '申请动物物种',
+  `strain` VARCHAR(50) DEFAULT NULL COMMENT '品系',
+  `quantity` INT NOT NULL COMMENT '申请数量',
+  `gender_requirement` ENUM('male', 'female', 'any') NOT NULL DEFAULT 'any' COMMENT '性别要求',
+  `min_weight` DECIMAL(10, 2) DEFAULT NULL COMMENT '最小体重(g)',
+  `max_weight` DECIMAL(10, 2) DEFAULT NULL COMMENT '最大体重(g)',
+  `purpose` TEXT NOT NULL COMMENT '使用目的描述',
+  `start_date` DATE NOT NULL COMMENT '预计使用开始日期',
+  `end_date` DATE NOT NULL COMMENT '预计使用结束日期',
+  `status` ENUM('draft', 'submitted', 'approved', 'rejected', 'withdrawn') NOT NULL DEFAULT 'draft' COMMENT '审批状态',
+  `approver_id` INT DEFAULT NULL COMMENT '审批人ID',
+  `approval_time` DATETIME DEFAULT NULL COMMENT '审批时间',
+  `approval_comment` TEXT COMMENT '审批意见',
+  `allocation_result` JSON COMMENT '分配结果JSON',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`applicant_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`approver_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`experiment_id`) REFERENCES `experiments`(`id`) ON DELETE SET NULL,
+  INDEX `idx_applicant_id` (`applicant_id`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_request_date` (`request_date`),
+  INDEX `idx_species` (`species`),
+  INDEX `idx_experiment_id` (`experiment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='动物使用申请表';
+
+-- ========================================
+-- 种子数据：动物使用申请
+-- ========================================
+INSERT INTO `animal_usage_requests` (`applicant_id`, `request_date`, `experiment_id`, `species`, `strain`, `quantity`, `gender_requirement`, `min_weight`, `max_weight`, `purpose`, `start_date`, `end_date`, `status`, `approver_id`, `approval_time`, `approval_comment`, `allocation_result`) VALUES
+(2, '2026-01-20', 1, '小鼠', 'C57BL/6', 2, 'male', 20.00, 25.00, '用于急性毒性预实验，需要雄性成年小鼠', '2026-02-01', '2026-02-15', 'submitted', NULL, NULL, NULL, NULL),
+(3, '2026-01-18', 2, '大鼠', 'SD', 3, 'any', 250.00, 300.00, '慢性毒性试验，雌雄各半', '2026-01-25', '2026-03-25', 'approved', 1, '2026-01-19 10:30:00', '同意申请，请按实验方案进行', '{"animalIds":[6,7,8],"animals":[{"id":6,"name":"大鼠-001","species":"大鼠","gender":"male","weight":335.5,"cageNumber":"R-01"},{"id":7,"name":"大鼠-002","species":"大鼠","gender":"male","weight":272.0,"cageNumber":"R-02"},{"id":8,"name":"大鼠-003","species":"大鼠","gender":"female","weight":358.5,"cageNumber":"R-03"}]}'),
+(2, '2026-01-15', NULL, '家兔', '新西兰白兔', 1, 'female', 2500.00, 3000.00, '抗体制备实验', '2026-02-10', '2026-05-10', 'draft', NULL, NULL, NULL, NULL),
+(3, '2026-01-21', 4, '豚鼠', 'Hartley', 4, 'any', 400.00, 500.00, '过敏性试验', '2026-02-05', '2026-02-20', 'rejected', 1, '2026-01-22 09:00:00', '目前豚鼠库存不足，建议延后申请或改用小鼠模型', NULL);
+

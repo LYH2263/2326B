@@ -21,6 +21,8 @@ import {
   BellOutlined,
   MessageOutlined,
   NotificationOutlined,
+  FormOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
 import { messageApi } from '../api';
 
@@ -69,10 +71,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
     { key: '/weight', icon: <FieldNumberOutlined />, label: '称重记录' },
     { key: '/inventory', icon: <MedicineBoxOutlined />, label: '库存管理' },
     { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },
+    { key: '/animal-usage-requests', icon: <FormOutlined />, label: '使用申请' },
     { key: '/statistics', icon: <BarChartOutlined />, label: '数据统计' },
     { key: '/messages', icon: <MessageOutlined />, label: '站内信' },
     ...(user?.role === 'admin'
-      ? [{ key: '/announcements', icon: <NotificationOutlined />, label: '公告管理' }]
+      ? [
+          { key: '/announcements', icon: <NotificationOutlined />, label: '公告管理' },
+          { key: '/animal-usage-requests/approval', icon: <AuditOutlined />, label: '申请审批' },
+        ]
       : []),
   ];
 
@@ -84,6 +90,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
     if (path.startsWith('/inventory')) return '/inventory';
     if (path.startsWith('/messages')) return '/messages';
     if (path.startsWith('/announcements')) return '/announcements';
+    if (path.startsWith('/animal-usage-requests/approval')) return '/animal-usage-requests/approval';
+    if (path.startsWith('/animal-usage-requests')) return '/animal-usage-requests';
     return path;
   };
 
@@ -104,6 +112,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       }
       if (item.key === '/announcements') {
         return path.startsWith('/announcements');
+      }
+      if (item.key === '/animal-usage-requests') {
+        return path.startsWith('/animal-usage-requests') && !path.startsWith('/animal-usage-requests/approval');
+      }
+      if (item.key === '/animal-usage-requests/approval') {
+        return path.startsWith('/animal-usage-requests/approval');
       }
       return item.key === path;
     });

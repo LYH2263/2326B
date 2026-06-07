@@ -21,6 +21,9 @@ import WeightRecords from './pages/WeightRecords';
 import MessageInbox from './pages/MessageInbox';
 import ComposeMessage from './pages/ComposeMessage';
 import AnnouncementManage from './pages/AnnouncementManage';
+import MyUsageRequests from './pages/MyUsageRequests';
+import UsageRequestApproval from './pages/UsageRequestApproval';
+import UsageRequestDetail from './pages/UsageRequestDetail';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -102,6 +105,9 @@ const App: React.FC = () => {
             <Route path="messages" element={<MessageInbox />} />
             <Route path="messages/compose" element={<ComposeMessage />} />
             <Route path="announcements" element={<AnnouncementManage />} />
+            <Route path="animal-usage-requests" element={<MyUsageRequests />} />
+            <Route path="animal-usage-requests/approval" element={<UsageRequestApproval />} />
+            <Route path="animal-usage-requests/:id" element={<UsageRequestDetail />} />
           </Route>
           <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
         </Routes>

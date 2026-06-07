@@ -213,4 +213,20 @@ export const userApi = {
   getList: (params?: any) => api.get('/users', { params }),
 };
 
+// ========== 动物使用申请 API ==========
+export const animalUsageRequestApi = {
+  getList: (params?: any) => api.get('/animal-usage-requests', { params }),
+  getMyRequests: (params?: any) => api.get('/animal-usage-requests/mine', { params }),
+  getDetail: (id: number) => api.get(`/animal-usage-requests/${id}`),
+  create: (data: any) => api.post('/animal-usage-requests', data),
+  update: (id: number, data: any) => api.patch(`/animal-usage-requests/${id}`, data),
+  delete: (id: number) => api.delete(`/animal-usage-requests/${id}`),
+  submit: (id: number) => api.post(`/animal-usage-requests/${id}/submit`),
+  withdraw: (id: number) => api.post(`/animal-usage-requests/${id}/withdraw`),
+  approve: (id: number, data: any) => api.post(`/animal-usage-requests/${id}/approve`, data),
+  reject: (id: number, data: any) => api.post(`/animal-usage-requests/${id}/reject`, data),
+  getAvailableAnimals: (id: number) => api.get(`/animal-usage-requests/${id}/available-animals`),
+  getTimeline: (id: number) => api.get(`/animal-usage-requests/${id}/timeline`),
+};
+
 export default api;
