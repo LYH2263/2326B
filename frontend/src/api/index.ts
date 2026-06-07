@@ -229,4 +229,21 @@ export const animalUsageRequestApi = {
   getTimeline: (id: number) => api.get(`/animal-usage-requests/${id}/timeline`),
 };
 
+// ========== 动物图片管理 API ==========
+export const animalPhotoApi = {
+  upload: (animalId: number, formData: FormData) =>
+    api.post(`/animal-photos/upload/${animalId}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
+  getList: (params?: any) => api.get('/animal-photos', { params }),
+  getByAnimalId: (animalId: number, params?: any) =>
+    api.get(`/animal-photos/animal/${animalId}`, { params }),
+  getDetail: (id: number) => api.get(`/animal-photos/${id}`),
+  update: (id: number, data: any) => api.patch(`/animal-photos/${id}`, data),
+  delete: (id: number) => api.delete(`/animal-photos/${id}`),
+  getAllTags: () => api.get('/animal-photos/tags'),
+  searchByTags: (tags: string, params?: any) =>
+    api.get('/animal-photos/search/tags', { params: { tags, ...params } }),
+};
+
 export default api;

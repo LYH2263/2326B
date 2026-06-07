@@ -637,3 +637,24 @@ INSERT INTO `animal_usage_requests` (`applicant_id`, `request_date`, `experiment
 (2, '2026-01-15', NULL, '家兔', '新西兰白兔', 1, 'female', 2500.00, 3000.00, '抗体制备实验', '2026-02-10', '2026-05-10', 'draft', NULL, NULL, NULL, NULL),
 (3, '2026-01-21', 4, '豚鼠', 'Hartley', 4, 'any', 400.00, 500.00, '过敏性试验', '2026-02-05', '2026-02-20', 'rejected', 1, '2026-01-22 09:00:00', '目前豚鼠库存不足，建议延后申请或改用小鼠模型', NULL);
 
+-- ========================================
+-- 动物图片表
+-- ========================================
+CREATE TABLE IF NOT EXISTS `animal_photos` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `animal_id` INT NOT NULL COMMENT '动物ID',
+  `image_url` VARCHAR(500) NOT NULL COMMENT '图片URL/路径',
+  `thumbnail_url` VARCHAR(500) NOT NULL COMMENT '缩略图路径',
+  `file_size` BIGINT NOT NULL COMMENT '文件大小(bytes)',
+  `original_filename` VARCHAR(255) NOT NULL COMMENT '原始文件名',
+  `shot_date` DATE DEFAULT NULL COMMENT '拍摄日期',
+  `tags` JSON DEFAULT NULL COMMENT '标签(JSON数组)',
+  `description` TEXT COMMENT '描述',
+  `uploader` VARCHAR(100) DEFAULT NULL COMMENT '上传人',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '上传时间',
+  FOREIGN KEY (`animal_id`) REFERENCES `animals`(`id`) ON DELETE CASCADE,
+  INDEX `idx_animal_id` (`animal_id`),
+  INDEX `idx_shot_date` (`shot_date`),
+  INDEX `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='动物图片表';
+

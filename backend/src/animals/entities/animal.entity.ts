@@ -12,6 +12,7 @@ import { FeedingRecord } from '../../feeding/entities/feeding-record.entity';
 import { AnimalTransfer } from '../../animal-transfers/entities/animal-transfer.entity';
 import { DeathRecord } from '../../death-records/entities/death-record.entity';
 import { WeightRecord } from '../../weight-records/entities/weight-record.entity';
+import { AnimalPhoto } from '../../animal-photos/entities/animal-photo.entity';
 
 @Entity('animals')
 export class Animal {
@@ -78,4 +79,7 @@ export class Animal {
 
   @OneToMany(() => WeightRecord, (record) => record.animal)
   weightRecords: WeightRecord[];
+
+  @OneToMany(() => AnimalPhoto, (photo) => photo.animal)
+  photos: AnimalPhoto[];
 }

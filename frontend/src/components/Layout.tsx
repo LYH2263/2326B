@@ -23,6 +23,7 @@ import {
   NotificationOutlined,
   FormOutlined,
   AuditOutlined,
+  PictureOutlined,
 } from '@ant-design/icons';
 import { messageApi } from '../api';
 
@@ -69,6 +70,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
     { key: '/project-progress', icon: <FundViewOutlined />, label: '项目进度' },
     { key: '/feeding', icon: <CoffeeOutlined />, label: '饲养记录' },
     { key: '/weight', icon: <FieldNumberOutlined />, label: '称重记录' },
+    { key: '/photo-library', icon: <PictureOutlined />, label: '图片库' },
     { key: '/inventory', icon: <MedicineBoxOutlined />, label: '库存管理' },
     { key: '/death-records', icon: <FileTextOutlined />, label: '死亡登记' },
     { key: '/animal-usage-requests', icon: <FormOutlined />, label: '使用申请' },

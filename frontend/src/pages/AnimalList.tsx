@@ -89,14 +89,8 @@ const AnimalList: React.FC = () => {
     setModalVisible(true);
   };
 
-  const handleDetail = async (id: number) => {
-    try {
-      const res: any = await animalApi.getDetail(id);
-      setDetailAnimal(res);
-      setDetailVisible(true);
-    } catch {
-      // handled
-    }
+  const handleDetail = (id: number) => {
+    navigate(`/animals/${id}`);
   };
 
   const handleDelete = async (id: number) => {
