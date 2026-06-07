@@ -106,6 +106,10 @@ export const statisticsApi = {
   getAnimalStats: () => api.get('/statistics/animals'),
   getExperimentStats: () => api.get('/statistics/experiments'),
   getFeedingStats: () => api.get('/statistics/feeding'),
+  getWorkstationTodo: (date?: string) => api.get('/statistics/workstation/todo', { params: { date } }),
+  getWorkstationProgress: (date?: string) => api.get('/statistics/workstation/progress', { params: { date } }),
+  getCageList: () => api.get('/statistics/workstation/cages'),
+  getAnimalsByCage: (cageNumber: string) => api.get('/statistics/workstation/animals-by-cage', { params: { cageNumber } }),
 };
 
 // ========== 动物转移/借调 API ==========

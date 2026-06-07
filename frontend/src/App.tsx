@@ -26,6 +26,7 @@ import UsageRequestApproval from './pages/UsageRequestApproval';
 import UsageRequestDetail from './pages/UsageRequestDetail';
 import AnimalDetail from './pages/AnimalDetail';
 import PhotoLibrary from './pages/PhotoLibrary';
+import Workstation from './pages/Workstation';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -89,6 +90,7 @@ const App: React.FC = () => {
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="workstation" element={<Workstation />} />
             <Route path="animals" element={<AnimalList />} />
             <Route path="animals/:id" element={<AnimalDetail />} />
             <Route path="photo-library" element={<PhotoLibrary />} />

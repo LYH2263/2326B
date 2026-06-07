@@ -24,6 +24,7 @@ import {
   FormOutlined,
   AuditOutlined,
   PictureOutlined,
+  DesktopOutlined,
 } from '@ant-design/icons';
 import { messageApi } from '../api';
 
@@ -63,6 +64,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
 
   const menuItems = [
     { key: '/dashboard', icon: <DashboardOutlined />, label: '系统首页' },
+    { key: '/workstation', icon: <DesktopOutlined />, label: '登记工作站' },
     { key: '/animals', icon: <BugOutlined />, label: '动物管理' },
     { key: '/animal-transfers', icon: <SwapOutlined />, label: '转移借调' },
     { key: '/health', icon: <HeartOutlined />, label: '健康记录' },
