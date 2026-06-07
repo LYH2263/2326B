@@ -169,4 +169,21 @@ export const necropsyReportApi = {
     api.delete(`/necropsy-reports/${id}/images`, { data: { imageUrl } }),
 };
 
+// ========== 称重记录 API ==========
+export const weightApi = {
+  getList: (params?: any) => api.get('/weight-records', { params }),
+  getDetail: (id: number) => api.get(`/weight-records/${id}`),
+  create: (data: any) => api.post('/weight-records', data),
+  update: (id: number, data: any) => api.patch(`/weight-records/${id}`, data),
+  delete: (id: number) => api.delete(`/weight-records/${id}`),
+  batchCreate: (data: any) => api.post('/weight-records/batch', data),
+  getCageList: () => api.get('/weight-records/cages'),
+  getAnimalsByCage: (cageNumber?: string) =>
+    api.get('/weight-records/animals-by-cage', { params: { cageNumber } }),
+  getGrowthRate: (animalId: number) =>
+    api.get(`/weight-records/growth-rate/${animalId}`),
+  getGroupStatistics: (params?: any) =>
+    api.get('/weight-records/statistics/group', { params }),
+};
+
 export default api;
