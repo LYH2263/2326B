@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import { json, urlencoded } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -25,6 +26,9 @@ async function bootstrap() {
       ],
     }),
   });
+
+  app.use(json({ limit: '200mb' }));
+  app.use(urlencoded({ limit: '200mb', extended: true }));
 
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',

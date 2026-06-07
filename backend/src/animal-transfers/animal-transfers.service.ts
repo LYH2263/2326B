@@ -35,9 +35,11 @@ export class AnimalTransfersService {
     }
 
     const transfer = this.transferRepository.create(dto);
-    transfer.status = 'pending';
+    if (!transfer.status) {
+      transfer.status = 'pending';
+    }
     const saved = await this.transferRepository.save(transfer);
-    this.logger.log(`Created animal transfer record: ${saved.id}`);
+    this.logger.log(`Created animal transfer record: ${saved.id}, status: ${saved.status}`);
     return this.findOne(saved.id);
   }
 

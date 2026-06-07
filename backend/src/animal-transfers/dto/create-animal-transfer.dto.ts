@@ -8,7 +8,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TransferReason } from '../entities/animal-transfer.entity';
+import { TransferReason, TransferStatus } from '../entities/animal-transfer.entity';
 
 export class CreateAnimalTransferDto {
   @ApiProperty({ description: '动物ID' })
@@ -57,4 +57,12 @@ export class CreateAnimalTransferDto {
   @IsOptional()
   @IsString()
   remarks?: string;
+
+  @ApiPropertyOptional({
+    description: '状态（创建时可选，默认为 pending）',
+    enum: ['pending', 'in_transit', 'completed', 'returned'],
+  })
+  @IsOptional()
+  @IsEnum(['pending', 'in_transit', 'completed', 'returned'])
+  status?: TransferStatus;
 }

@@ -220,16 +220,28 @@ const Workstation: React.FC = () => {
     }
   };
 
+  const reasonMap: Record<string, string> = {
+    '实验使用': 'permanent_transfer',
+    '转移/借调': 'permanent_transfer',
+    '死亡处理': 'permanent_transfer',
+    '退供应商': 'return_to_supplier',
+    '其他': 'permanent_transfer',
+  };
+
   const handleCheckout = async () => {
     try {
       const values = await checkoutForm.validateFields();
       setSubmitting(true);
+      const userStr = localStorage.getItem('user');
+      const handler = userStr ? JSON.parse(userStr).name || JSON.parse(userStr).username : '值班员';
       await animalTransferApi.create({
         animalId: values.animalId,
         fromDepartment: '本实验室',
         toDepartment: values.receiver,
-        transferReason: values.reason,
-        transferDate: today,
+        reason: reasonMap[values.reason] || 'permanent_transfer',
+        transferDate: values.transferDate ? values.transferDate.format('YYYY-MM-DD') : today,
+        handler: values.operator || handler,
+        remarks: values.notes,
         status: 'completed',
       });
       message.success('动物出库登记成功');
